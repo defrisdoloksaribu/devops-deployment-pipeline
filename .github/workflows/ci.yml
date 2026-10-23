@@ -1,11 +1,14 @@
 
-name: DevOps CI Pipeline
+name: DevOps CI/CD Pipeline
 
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
+
+permissions:
+  contents: read
 
 jobs:
   test-and-build:
@@ -28,3 +31,96 @@ jobs:
 
       - name: Build Docker image
         run: docker build -t devops-deployment-pipeline:ci .
+
+  deploy:
+    needs: test-and-build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Connect to Tailscale
+        uses: tailscale/github-action@v4
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          audience: ${{ secrets.TS_AUDIENCE }}
+          tags: tag:ci
+
+      - name: Configure SSH
+        env:
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_PORT: ${{ secrets.DEPLOY_PORT }}
+        run: |
+          set -eu
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s\n' "$DEPLOY_SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -p "$DEPLOY_PORT" "$DEPLOY_HOST" >> ~/.ssh/known_hosts
+
+      - name: Deploy application
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_PORT: ${{ secrets.DEPLOY_PORT }}
+          DEPLOY_SHA: ${{ github.sha }}
+        run: |
+          set -eu
+
+          ssh -i ~/.ssh/deploy_key \
+            -p "$DEPLOY_PORT" \
+            -o BatchMode=yes \
+            "$DEPLOY_USER@$DEPLOY_HOST" \
+            "DEPLOY_SHA='$DEPLOY_SHA' bash -s" <<'REMOTE'
+          set -eu
+
+          cd "$HOME/devops-deployment-pipeline-git"
+          git fetch origin main
+          git reset --hard origin/main
+
+          IMAGE="devops-deployment-pipeline:$DEPLOY_SHA"
+
+          # Build before touching the running application.
+          sudo docker build -t "$IMAGE" .
+
+          # Preserve the old container for rollback.
+          sudo docker stop devops-app
+          sudo docker rename devops-app devops-app-previous
+
+          # Start the new version.
+          if ! sudo docker run -d \
+            --name devops-app \
+            --restart unless-stopped \
+            -p 8000:8000 \
+            "$IMAGE"; then
+            sudo docker rm -f devops-app 2>/dev/null || true
+            sudo docker rename devops-app-previous devops-app
+            sudo docker start devops-app
+            exit 1
+          fi
+
+          # Verify application health.
+          healthy=0
+          for attempt in $(seq 1 15); do
+            if curl --fail --silent http://127.0.0.1:8000/health >/dev/null; then
+              healthy=1
+              break
+            fi
+            sleep 2
+          done
+
+          if [ "$healthy" -eq 1 ]; then
+            sudo docker rm -f devops-app-previous
+            echo "Deployment successful: $DEPLOY_SHA"
+          else
+            echo "Health check failed; rolling back."
+            sudo docker rm -f devops-app
+            sudo docker rename devops-app-previous devops-app
+            sudo docker start devops-app
+            exit 1
+          fi
+          REMOTE
