@@ -20,11 +20,11 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install dependencies
-        run: pip install -r app/requirements.txt
+      - name: Install test dependencies
+        run: pip install -r requirements-dev.txt
 
-      - name: Check application imports
-        run: python -c "from app.main import app; print('Application import successful')"
+      - name: Run automated tests
+        run: python -m pytest -v
 
       - name: Build Docker image
         run: docker build -t devops-deployment-pipeline:ci .
