@@ -1,0 +1,31 @@
+name: Kubernetes Manifest Validation
+
+on:
+  push:
+    branches:
+      - main
+      - feat/kubernetes-self-healing
+    paths:
+      - "k8s/**"
+      - ".github/workflows/kubernetes-validation.yml"
+  pull_request:
+    paths:
+      - "k8s/**"
+      - ".github/workflows/kubernetes-validation.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate-manifests:
+    name: Validate Kubernetes YAML
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate manifests with kubeconform
+        uses: docker://ghcr.io/yannh/kubeconform:latest
+        with:
+          args: "-strict -summary k8s/"
