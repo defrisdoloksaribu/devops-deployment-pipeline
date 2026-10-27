@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: devops-app
-          image: devops-deployment-pipeline:k8s
+          image: devops-deployment-pipeline:monitoring
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8000
