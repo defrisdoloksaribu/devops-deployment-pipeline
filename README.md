@@ -1,645 +1,400 @@
-# \# 🚀 Self-Healing Kubernetes Platform with CI/CD and Monitoring
+::: {align="center"}
+# 🚀 Self-Healing Kubernetes Platform
+
+### CI/CD • Kubernetes • Prometheus • Grafana
+
+**Proyek Portofolio DevOps \| DevOps Portfolio Project**
+
+Membangun dan memantau aplikasi berbasis container dengan automated
+testing, Kubernetes self-healing, serta observability menggunakan
+Prometheus dan Grafana.
+
+![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-API-009688?logo=fastapi&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-Containers-2496ED?logo=docker&logoColor=white)
+![Kubernetes](https://img.shields.io/badge/Kubernetes-Orchestration-326CE5?logo=kubernetes&logoColor=white)
+![GitHub
+Actions](https://img.shields.io/badge/GitHub_Actions-CI%2FCD-2088FF?logo=githubactions&logoColor=white)
+![Prometheus](https://img.shields.io/badge/Prometheus-Monitoring-E6522C?logo=prometheus&logoColor=white)
+![Grafana](https://img.shields.io/badge/Grafana-Dashboard-F46800?logo=grafana&logoColor=white)
+
+[Repository](https://github.com/defrisdoloksaribu/devops-deployment-pipeline)
+·
+[Issues](https://github.com/defrisdoloksaribu/devops-deployment-pipeline/issues)
+:::
+
+------------------------------------------------------------------------
+
+## 📌 Tentang Proyek \| About
+
+Proyek ini merupakan latihan praktis DevOps yang menunjukkan alur
+pengujian aplikasi, pembuatan Docker image, deployment ke Kubernetes,
+pemulihan pod, dan monitoring metrik aplikasi.
+
+This project demonstrates a containerized FastAPI application with CI/CD
+checks, Kubernetes self-healing behavior, and application monitoring in
+a local development environment.
+
+### 🎯 Tujuan \| Goals
+
+-   Mengotomatisasi pengujian dan proses build menggunakan GitHub
+    Actions.
+-   Menjalankan aplikasi dengan tiga replika Kubernetes.
+-   Menguji penggantian pod setelah pod dihapus.
+-   Mengumpulkan metrik aplikasi melalui Prometheus.
+-   Menampilkan metrik melalui dashboard Grafana.
+
+## ✨ Fitur Utama \| Key Features
+
+  -----------------------------------------------------------------------
+  Fitur                               Deskripsi
+  ----------------------------------- -----------------------------------
+  ⚙️ **CI/CD**                        GitHub Actions menjalankan
+                                      automated tests dan Docker image
+                                      build.
+
+  🐳 **Containerization**             Aplikasi FastAPI dikemas ke dalam
+                                      Docker image.
+
+  ☸️ **Kubernetes Deployment**        Deployment dikonfigurasi dengan
+                                      tiga replika.
+
+  🔄 **Self-Healing**                 Kubernetes membuat pod pengganti
+                                      ketika sebuah pod dihapus.
+
+  ❤️ **Health Probes**                Readiness dan liveness probes
+                                      menggunakan endpoint `/health`.
+
+  📊 **Metrics**                      Metrik aplikasi tersedia di
+                                      endpoint `/metrics` untuk
+                                      Prometheus.
+
+  📈 **Monitoring**                   Grafana menampilkan empat panel
+                                      pemantauan aplikasi.
+
+  ✅ **Manifest Validation**          Kubernetes manifests diperiksa
+                                      dengan kubeconform melalui GitHub
+                                      Actions.
+  -----------------------------------------------------------------------
+
+## 🏗️ Arsitektur \| Architecture
+
+``` text
+Developer
+   |
+   v
+GitHub Repository
+   |
+   v
+GitHub Actions
+   +--> Automated Tests
+   +--> Docker Image Build
+   +--> Kubernetes Manifest Validation
+   |
+   v
+Kubernetes Cluster
+   +--> FastAPI Application (3 replicas)
+   +--> Health Probes (/health)
+   +--> Application Metrics (/metrics)
+   +--> Pod Self-Healing
+              |
+              v
+          Prometheus
+              |
+              v
+        Grafana Dashboard
+```
 
-#
+> **Catatan:** Diagram ini menunjukkan komponen utama proyek. Tahapan
+> CI/CD dan deployment ke lingkungan remote bergantung pada konfigurasi
+> workflow masing-masing; tidak semua komponen berarti berjalan sebagai
+> satu deployment otomatis.
+
+## 🧰 Teknologi \| Tech Stack
+
+  -----------------------------------------------------------------------
+  Teknologi                           Penggunaan
+  ----------------------------------- -----------------------------------
+  Python + FastAPI                    Aplikasi API
 
-# \*\*A DevOps Portfolio Project | Proyek Portofolio DevOps\*\*
+  pytest                              Automated testing
 
-#
+  Docker                              Container image
 
-# Membangun platform aplikasi berbasis container dengan automated CI/CD, Kubernetes self-healing, dan monitoring real-time menggunakan Prometheus dan Grafana.
+  Kubernetes + kubectl                Deployment, replicas, services, dan
+                                      health probes
 
-#
+  GitHub Actions                      CI/CD workflow
 
-# <p align="center">
+  kubeconform                         Validasi manifest Kubernetes
 
-# &#x20; <img src="https://img.shields.io/badge/Python-3.12-blue?logo=python\&logoColor=white" alt="Python"/>
+  Prometheus                          Pengumpulan dan query metrik
 
-# &#x20; <img src="https://img.shields.io/badge/FastAPI-Framework-009688?logo=fastapi\&logoColor=white" alt="FastAPI"/>
+  Grafana                             Dashboard monitoring
+  -----------------------------------------------------------------------
 
-# &#x20; <img src="https://img.shields.io/badge/Docker-Containerization-2496ED?logo=docker\&logoColor=white" alt="Docker"/>
+## 📁 Struktur Proyek \| Project Structure
 
-# &#x20; <img src="https://img.shields.io/badge/Kubernetes-Orchestration-326CE5?logo=kubernetes\&logoColor=white" alt="Kubernetes"/>
+``` text
+devops-deployment-pipeline/
+├── .github/
+│   └── workflows/
+│       ├── ci.yml
+│       └── kubernetes-validation.yml
+├── app/
+│   ├── main.py
+│   └── requirements.txt
+├── k8s/
+│   ├── deployment.yaml
+│   └── monitoring/
+│       └── monitoring.yaml
+├── tests/
+│   └── test_main.py
+├── Dockerfile
+├── requirements-dev.txt
+├── requirements.txt
+└── README.md
+```
 
-# &#x20; <img src="https://img.shields.io/badge/GitHub\_Actions-CI%2FCD-2088FF?logo=githubactions\&logoColor=white" alt="GitHub Actions"/>
+## 🚀 Menjalankan Proyek \| Getting Started
 
-# &#x20; <img src="https://img.shields.io/badge/Prometheus-Monitoring-E6522C?logo=prometheus\&logoColor=white" alt="Prometheus"/>
+### Prasyarat \| Prerequisites
 
-# &#x20; <img src="https://img.shields.io/badge/Grafana-Dashboard-F46800?logo=grafana\&logoColor=white" alt="Grafana"/>
+-   Git dan Python tersedia di komputer.
+-   Docker berjalan.
+-   Kubernetes cluster aktif dan dapat diakses oleh `kubectl`.
+-   Untuk lingkungan lokal Windows, Docker Desktop dengan Kubernetes
+    atau cluster lokal lain yang sesuai.
 
-# </p>
+### 1. Clone repository
 
-#
+``` bash
+git clone https://github.com/defrisdoloksaribu/devops-deployment-pipeline.git
+cd devops-deployment-pipeline
+```
 
-# \## 📌 Tentang Proyek | About This Project
+### 2. Install dependencies dan jalankan tests
 
-#
+Di Windows, gunakan Python launcher `py`:
 
-# Proyek ini merupakan implementasi praktik DevOps untuk menunjukkan bagaimana aplikasi dapat diuji, dikemas ke dalam Docker image, dijalankan di Kubernetes, dan dipantau melalui sistem monitoring.
+``` cmd
+py -m pip install -r requirements-dev.txt
+py -m pytest -v
+```
 
-#
+### 3. Build Docker image
 
-# The platform demonstrates automated testing, containerization, Kubernetes orchestration, pod recovery, and application observability in a local development environment.
+``` cmd
+docker build -t devops-deployment-pipeline:monitoring .
+```
 
-#
+Pastikan image dapat diakses oleh Kubernetes cluster yang digunakan.
+Pada cluster lokal, image perlu dibangun atau dimuat ke lingkungan
+container yang digunakan oleh cluster tersebut.
 
-# \*\*Tujuan proyek:\*\*
+### 4. Deploy aplikasi
 
-# \- Menerapkan CI/CD menggunakan GitHub Actions.
+``` cmd
+kubectl apply -f k8s/deployment.yaml
+kubectl rollout status deployment/devops-app
+kubectl get pods
+kubectl get services
+```
 
-# \- Menjalankan aplikasi dengan tiga replika Kubernetes.
+### 5. Deploy Prometheus dan Grafana
 
-# \- Menguji mekanisme self-healing ketika sebuah pod dihapus.
+``` cmd
+kubectl apply -f k8s/monitoring/monitoring.yaml
+kubectl rollout status deployment/prometheus -n monitoring
+kubectl rollout status deployment/grafana -n monitoring
+kubectl get pods -n monitoring
+```
 
-# \- Mengumpulkan metrik aplikasi menggunakan Prometheus.
+### 6. Akses aplikasi \| Access the application
 
-# \- Memvisualisasikan performa aplikasi melalui dashboard Grafana.
+Jalankan perintah berikut di terminal terpisah:
 
-#
+``` cmd
+kubectl port-forward service/devops-app 8000:8000
+```
 
-# \## ✨ Key Features | Fitur Utama
+  -----------------------------------------------------------------------
+  Endpoint                            Fungsi
+  ----------------------------------- -----------------------------------
+  <http://localhost:8000/>            Halaman utama API
 
-#
+  <http://localhost:8000/health>      Status kesehatan aplikasi
 
-# | Fitur | Penjelasan |
+  <http://localhost:8000/metrics>     Metrik aplikasi untuk Prometheus
+  -----------------------------------------------------------------------
 
-# |---|---|
+### 7. Akses Prometheus
 
-# | ⚙️ CI/CD Automation | GitHub Actions menjalankan automated tests dan Docker image build. |
+``` cmd
+kubectl port-forward -n monitoring service/prometheus 9090:9090
+```
 
-# | 🐳 Containerization | FastAPI dikemas dalam Docker image. |
+Buka <http://localhost:9090>. Contoh query PromQL:
 
-# | ☸️ Kubernetes Deployment | Aplikasi dikonfigurasi menggunakan tiga replika. |
+``` promql
+sum(http_requests_total)
+```
 
-# | 🔄 Self-Healing | Kubernetes membuat pod pengganti ketika sebuah pod dihapus. |
+### 8. Akses Grafana
 
-# | ❤️ Health Probes | Readiness dan liveness probes menggunakan endpoint `/health`. |
+``` cmd
+kubectl port-forward -n monitoring service/grafana 3000:3000
+```
 
-# | 📊 Metrics Collection | Prometheus mengambil metrik dari endpoint `/metrics`. |
+Buka <http://localhost:3000>. Atur Prometheus sebagai data source dengan
+URL internal berikut:
 
-# | 📈 Monitoring Dashboard | Grafana menampilkan empat panel monitoring aplikasi. |
+``` text
+http://prometheus.monitoring.svc.cluster.local:9090
+```
 
-# | ✅ Manifest Validation | Kubernetes manifests divalidasi menggunakan kubeconform melalui GitHub Actions. |
+Jalankan port-forward Prometheus dan Grafana di terminal yang berbeda
+jika keduanya ingin dibuka bersamaan.
 
-#
+## 📊 Monitoring Dashboard
 
-# \## 🏗️ Architecture | Arsitektur Sistem
+Dashboard Grafana berisi empat panel:
 
-#
+1.  **Total HTTP Requests** --- jumlah request HTTP yang tercatat.
+2.  **HTTP Requests per Second** --- laju request berdasarkan interval
+    waktu.
+3.  **Average Response Time** --- rata-rata durasi request berdasarkan
+    metrik instrumentasi.
+4.  **Requests by Endpoint** --- jumlah request yang dikelompokkan
+    berdasarkan endpoint.
 
-# ```text
+Contoh query PromQL yang digunakan:
 
-# Developer
+**Total requests**
 
-# &#x20;   |
+``` promql
+sum(http_requests_total)
+```
 
-# &#x20;   v
+**Request rate**
 
-# GitHub Repository
+``` promql
+sum(rate(http_requests_total[5m]))
+```
 
-# &#x20;   |
+**Average response time**
 
-# &#x20;   v
+``` promql
+sum(rate(http_request_duration_seconds_sum[5m]))
+/
+sum(rate(http_request_duration_seconds_count[5m]))
+```
 
-# GitHub Actions
+**Requests per endpoint**
 
-# &#x20;   |
+``` promql
+sum by (handler) (http_requests_total)
+```
 
-# &#x20;   +---- Automated Tests
+## 🔄 Pengujian Self-Healing \| Self-Healing Test
 
-# &#x20;   |
+Pengujian ini memverifikasi bahwa Kubernetes berusaha mempertahankan
+jumlah replika yang dikonfigurasi.
 
-# &#x20;   +---- Docker Image Build
+1.  Periksa pod:
 
-# &#x20;   |
+    ``` cmd
+    kubectl get pods
+    ```
 
-# &#x20;   +---- Kubernetes Manifest Validation
+2.  Hapus satu pod aplikasi. Ganti `<pod-name>` dengan nama pod yang
+    benar:
 
-# &#x20;   |
+    ``` cmd
+    kubectl delete pod <pod-name>
+    ```
 
-# &#x20;   v
+3.  Pantau pod dan penggantinya:
 
-# Kubernetes Cluster
+    ``` cmd
+    kubectl get pods -w
+    ```
 
-# &#x20;   |
+4.  Periksa Deployment:
 
-# &#x20;   +---- FastAPI Application
+    ``` cmd
+    kubectl get deployment devops-app
+    ```
 
-# &#x20;   |       |
+**Hasil yang diharapkan:** Kubernetes membuat pod pengganti agar jumlah
+replika kembali ke jumlah yang diinginkan. Perilaku ini membuktikan
+pemulihan pod yang dikelola oleh Deployment.
 
-# &#x20;   |       +---- 3 Replicas
+## ✅ Validasi \| Validation
 
-# &#x20;   |       +---- /health
+Pemeriksaan yang telah dilakukan selama pengembangan:
 
-# &#x20;   |       +---- /metrics
+-   [x] Dua application tests lulus di lingkungan lokal.
+-   [x] Docker image berhasil dibangun.
+-   [x] Deployment aplikasi berjalan dengan tiga replika.
+-   [x] Pod pengganti dibuat setelah satu pod dihapus.
+-   [x] Monitoring manifest lolos client-side dry-run validation.
+-   [x] Prometheus berhasil mengambil metrik aplikasi.
+-   [x] Grafana berhasil terhubung ke Prometheus dan menampilkan empat
+    panel.
+-   [x] Pemeriksaan GitHub Actions untuk CI dan validasi manifest
+    berhasil pada pull request monitoring.
 
-# &#x20;   |
+## 📸 Screenshot \| Bukti Implementasi
 
-# &#x20;   +---- Self-Healing
+Tambahkan screenshot asli dari hasil pengujian ke folder `screenshots/`,
+lalu aktifkan gambar di bawah dengan nama file yang sesuai.
 
-# &#x20;   |
+  Bukti                Nama file
+  -------------------- -----------------------------------------
+  GitHub Actions       `screenshots/01-github-actions.png`
+  Kubernetes pods      `screenshots/02-kubernetes-pods.png`
+  Self-healing test    `screenshots/03-self-healing.png`
+  Prometheus targets   `screenshots/04-prometheus-targets.png`
+  Grafana dashboard    `screenshots/05-grafana-dashboard.png`
 
-# &#x20;   v
+Contoh cara menampilkan dashboard setelah file screenshot ditambahkan:
 
-# Prometheus
+``` markdown
+![Grafana Monitoring Dashboard](screenshots/05-grafana-dashboard.png)
+```
 
-# &#x20;   |
+## 🎓 Hal yang Dipelajari \| Learning Outcomes
 
-# &#x20;   v
+Melalui proyek ini, saya mempraktikkan:
 
-# Grafana Dashboard
+-   Penyusunan CI/CD checks dan automated testing.
+-   Containerization menggunakan Docker.
+-   Kubernetes Deployment, Services, replicas, dan health probes.
+-   Konsep self-healing dan desired replica count.
+-   Pengumpulan serta query metrik menggunakan Prometheus.
+-   Pembuatan dashboard monitoring dengan Grafana.
+-   Validasi konfigurasi Kubernetes.
+-   Pengelolaan perubahan melalui Git dan GitHub Pull Requests.
 
-# ```
+## 🔮 Pengembangan Selanjutnya \| Future Improvements
 
-#
+-   Menambahkan alerting rules dan notifikasi.
+-   Menyiapkan persistent storage untuk Prometheus dan Grafana.
+-   Menambahkan monitoring penggunaan CPU dan memory.
+-   Mengelola deployment menggunakan Helm.
+-   Memperluas automated deployment ke Kubernetes.
+-   Menambahkan pengujian availability dan recovery.
 
-# \*Catatan: deployment otomatis ke lingkungan remote merupakan bagian terpisah dari workflow yang sudah ada. Diagram ini menggambarkan komponen utama proyek, bukan jaminan bahwa seluruh tahap berjalan dalam satu deployment otomatis.\*
+## 👨‍💻 Author
 
-#
+**Defris Doloksaribu**
 
-# \## 🧰 Tech Stack | Teknologi
+-   GitHub: [@defrisdoloksaribu](https://github.com/defrisdoloksaribu)
+-   Repository:
+    [devops-deployment-pipeline](https://github.com/defrisdoloksaribu/devops-deployment-pipeline)
 
-#
+------------------------------------------------------------------------
 
-# | Teknologi | Kegunaan |
-
-# |---|---|
-
-# | Python \& FastAPI | Membangun aplikasi API. |
-
-# | pytest | Menjalankan pengujian aplikasi. |
-
-# | Docker | Mengemas aplikasi ke dalam container image. |
-
-# | Kubernetes | Mengelola replika, health probes, dan pemulihan pod. |
-
-# | GitHub Actions | Mengotomatisasi pengujian dan proses build. |
-
-# | kubeconform | Memvalidasi konfigurasi Kubernetes. |
-
-# | Prometheus | Mengumpulkan dan menyimpan metrik. |
-
-# | Grafana | Membuat dashboard visualisasi metrik. |
-
-#
-
-# \## 📁 Project Structure | Struktur Folder
-
-#
-
-# ```text
-
-# devops-deployment-pipeline/
-
-# ├── .github/
-
-# │   └── workflows/
-
-# │       ├── ci.yml
-
-# │       └── kubernetes-validation.yml
-
-# ├── app/
-
-# │   ├── main.py
-
-# │   └── requirements.txt
-
-# ├── k8s/
-
-# │   ├── deployment.yaml
-
-# │   └── monitoring/
-
-# │       └── monitoring.yaml
-
-# ├── tests/
-
-# │   └── test\_main.py
-
-# ├── Dockerfile
-
-# ├── requirements-dev.txt
-
-# ├── requirements.txt
-
-# └── README.md
-
-# ```
-
-#
-
-# \## 🚀 Getting Started | Cara Menjalankan
-
-#
-
-# \### 1. Clone Repository
-
-#
-
-# ```bash
-
-# git clone https://github.com/defrisdoloksaribu/devops-deployment-pipeline.git
-
-# cd devops-deployment-pipeline
-
-# ```
-
-#
-
-# \### 2. Install Dependencies dan Jalankan Tests
-
-#
-
-# ```bash
-
-# py -m pip install -r requirements-dev.txt
-
-# py -m pytest -v
-
-# ```
-
-#
-
-# Perintah di atas dapat digunakan di Windows apabila launcher `py` sudah tersedia.
-
-#
-
-# \### 3. Build Docker Image
-
-#
-
-# ```bash
-
-# docker build -t devops-deployment-pipeline:monitoring .
-
-# ```
-
-#
-
-# Pastikan image tersedia bagi Kubernetes cluster yang digunakan.
-
-#
-
-# \### 4. Deploy Aplikasi ke Kubernetes
-
-#
-
-# ```bash
-
-# kubectl apply -f k8s/deployment.yaml
-
-# kubectl rollout status deployment/devops-app
-
-# kubectl get pods
-
-# kubectl get services
-
-# ```
-
-#
-
-# \### 5. Deploy Monitoring Stack
-
-#
-
-# ```bash
-
-# kubectl apply -f k8s/monitoring/monitoring.yaml
-
-# kubectl rollout status deployment/prometheus -n monitoring
-
-# kubectl rollout status deployment/grafana -n monitoring
-
-# kubectl get pods -n monitoring
-
-# ```
-
-#
-
-# \### 6. Access Application | Akses Aplikasi
-
-#
-
-# Jalankan port forwarding:
-
-#
-
-# ```bash
-
-# kubectl port-forward service/devops-app 8000:8000
-
-# ```
-
-#
-
-# Buka endpoint berikut di browser:
-
-#
-
-# | Endpoint | Fungsi |
-
-# |---|---|
-
-# | \[localhost:8000](http://localhost:8000/) | Halaman utama API. |
-
-# | \[localhost:8000/health](http://localhost:8000/health) | Memeriksa status kesehatan aplikasi. |
-
-# | \[localhost:8000/metrics](http://localhost:8000/metrics) | Melihat metrik untuk Prometheus. |
-
-#
-
-# \### 7. Access Prometheus
-
-#
-
-# ```bash
-
-# kubectl port-forward -n monitoring service/prometheus 9090:9090
-
-# ```
-
-#
-
-# Buka \[Prometheus UI](http://localhost:9090).
-
-#
-
-# Contoh query untuk melihat jumlah HTTP request:
-
-#
-
-# ```promql
-
-# sum(http\_requests\_total)
-
-# ```
-
-#
-
-# \### 8. Access Grafana
-
-#
-
-# ```bash
-
-# kubectl port-forward -n monitoring service/grafana 3000:3000
-
-# ```
-
-#
-
-# Buka \[Grafana Dashboard](http://localhost:3000).
-
-#
-
-# Konfigurasikan data source Prometheus dengan URL berikut:
-
-#
-
-# ```text
-
-# http://prometheus.monitoring.svc.cluster.local:9090
-
-# ```
-
-#
-
-# Pastikan port forwarding untuk Prometheus dan Grafana dijalankan pada terminal terpisah apabila keduanya ingin diakses bersamaan.
-
-#
-
-# \## 📊 Monitoring Dashboard
-
-#
-
-# Dashboard Grafana mencakup empat visualisasi utama:
-
-#
-
-# 1\. \*\*Total HTTP Requests\*\* — jumlah permintaan HTTP yang tercatat.
-
-# 2\. \*\*HTTP Requests per Second\*\* — laju permintaan dalam interval waktu.
-
-# 3\. \*\*Average Response Time\*\* — estimasi rata-rata durasi penanganan permintaan.
-
-# 4\. \*\*Requests by Endpoint\*\* — distribusi permintaan berdasarkan endpoint.
-
-#
-
-# Contoh PromQL yang digunakan:
-
-#
-
-# ```promql
-
-# sum(http\_requests\_total)
-
-# ```
-
-#
-
-# ```promql
-
-# sum(rate(http\_requests\_total\[5m]))
-
-# ```
-
-#
-
-# ```promql
-
-# sum(rate(http\_request\_duration\_seconds\_sum\[5m]))
-
-# /
-
-# sum(rate(http\_request\_duration\_seconds\_count\[5m]))
-
-# ```
-
-#
-
-# ```promql
-
-# sum by (handler) (http\_requests\_total)
-
-# ```
-
-#
-
-# \## 🔄 Self-Healing Test | Pengujian Pemulihan Pod
-
-#
-
-# Pengujian dilakukan untuk memverifikasi kemampuan Kubernetes mempertahankan jumlah replika yang diinginkan.
-
-#
-
-# \*\*Langkah pengujian:\*\*
-
-#
-
-# 1\. Periksa pod aplikasi:
-
-#
-
-# &#x20;  ```bash
-
-# &#x20;  kubectl get pods
-
-# &#x20;  ```
-
-#
-
-# 2\. Hapus satu pod aplikasi:
-
-#
-
-# &#x20;  ```bash
-
-# &#x20;  kubectl delete pod <pod-name>
-
-# &#x20;  ```
-
-#
-
-# &#x20;  Ganti `<pod-name>` dengan nama pod yang sebenarnya.
-
-#
-
-# 3\. Pantau proses pemulihan:
-
-#
-
-# &#x20;  ```bash
-
-# &#x20;  kubectl get pods -w
-
-# &#x20;  ```
-
-#
-
-# 4\. Periksa status Deployment:
-
-#
-
-# &#x20;  ```bash
-
-# &#x20;  kubectl get deployment devops-app
-
-# &#x20;  ```
-
-#
-
-# \*\*Expected result:\*\* Kubernetes membuat pod pengganti dan berusaha mengembalikan Deployment ke tiga replika yang diinginkan.
-
-#
-
-# \## ✅ Validation Results | Hasil Pengujian
-
-#
-
-# Pengujian berikut telah berhasil dilakukan selama pengembangan:
-
-#
-
-# \- \[x] Automated application tests passed.
-
-# \- \[x] Docker image berhasil dibangun.
-
-# \- \[x] Kubernetes Deployment mencapai kondisi running.
-
-# \- \[x] Pod pengganti dibuat setelah sebuah pod dihapus.
-
-# \- \[x] Monitoring manifests lolos client-side dry-run validation.
-
-# \- \[x] Prometheus berhasil mengambil metrik aplikasi.
-
-# \- \[x] Grafana berhasil terhubung ke Prometheus dan menampilkan empat panel.
-
-# \- \[x] GitHub Actions CI dan Kubernetes manifest validation berhasil pada Pull Request monitoring.
-
-#
-
-# \## 📸 Screenshots | Bukti Implementasi
-
-#
-
-# Bukti visual akan ditambahkan setelah screenshot disimpan ke folder `screenshots/`.
-
-#
-
-# | Bukti | Nama File |
-
-# |---|---|
-
-# | GitHub Actions | `screenshots/01-github-actions.png` |
-
-# | Kubernetes Pods | `screenshots/02-kubernetes-pods.png` |
-
-# | Self-Healing Test | `screenshots/03-self-healing.png` |
-
-# | Prometheus Targets | `screenshots/04-prometheus-targets.png` |
-
-# | Grafana Dashboard | `screenshots/05-grafana-dashboard.png` |
-
-#
-
-# \## 🎯 Learning Outcomes | Hal yang Dipelajari
-
-#
-
-# Melalui proyek ini, saya mempraktikkan:
-
-#
-
-# \- Dasar implementasi CI/CD dan automated testing.
-
-# \- Containerization menggunakan Docker.
-
-# \- Kubernetes Deployment, Services, dan health probes.
-
-# \- Konsep self-healing dan desired replica count.
-
-# \- Pengumpulan metrik dengan Prometheus.
-
-# \- Visualisasi monitoring menggunakan Grafana.
-
-# \- Validasi konfigurasi Kubernetes.
-
-# \- Pengelolaan perubahan kode menggunakan Git dan GitHub Pull Requests.
-
-#
-
-# \## 🔮 Future Improvements | Pengembangan Selanjutnya
-
-#
-
-# \- Implementasi alerting rules dan notifikasi.
-
-# \- Persistent storage untuk Prometheus dan Grafana.
-
-# \- Monitoring resource CPU dan memory.
-
-# \- Pengelolaan deployment menggunakan Helm.
-
-# \- Pengembangan automated deployment ke Kubernetes.
-
-# \- Penambahan pengujian availability dan recovery.
-
-#
-
-# \## 👨‍💻 Author
-
-#
-
-# \*\*Defris Doloksaribu\*\*
-
-#
-
-# \- GitHub: \[@defrisdoloksaribu](https://github.com/defrisdoloksaribu)
-
-# \- Repository: \[devops-deployment-pipeline](https://github.com/defrisdoloksaribu/devops-deployment-pipeline)
-
-#
-
-# \*Built as a hands-on learning project to develop practical DevOps, Kubernetes, CI/CD, and monitoring skills.\*
+*Built as a hands-on portfolio project to develop practical DevOps,
+Kubernetes, CI/CD, and monitoring skills.*
